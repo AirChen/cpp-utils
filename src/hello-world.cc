@@ -1,6 +1,7 @@
 #include <ctime>
 #include <string>
 #include <iostream>
+#include <filesystem>
 #include "common/math/wykobi/wykobi.hpp"
 
 std::string get_greet(const std::string& who) {
@@ -23,5 +24,11 @@ int main(int argc, char** argv) {
   }
   std::cout << get_greet(who) << std::endl;
   print_localtime();
+  
+  std::filesystem::path hello_dir = "hello_directory";
+  if (std::filesystem::create_directory(hello_dir)) {
+    std::cout << "create file system successfully\n";
+  }
+  
   return 0;
 }
