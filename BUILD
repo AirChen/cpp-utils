@@ -19,3 +19,15 @@ cc_binary (
         "@gtest//:gtest_main",
     ],
 )
+
+cc_binary (
+    name = "test_threadsafe_lookup_table",
+    srcs = [
+        "src/threadsafe_lookup_table_test.cpp",
+        "src/threadsafe_lookup_table.h"
+    ],
+    deps = [
+        "@gtest//:gtest",
+        "@gtest//:gtest_main",
+    ],
+)
