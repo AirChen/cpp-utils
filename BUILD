@@ -7,3 +7,15 @@ cc_binary(
         "//common/math/wykobi:wykobi",
     ],
 )
+
+cc_binary (
+    name = "test_threadsafe_queue",
+    srcs = [
+        "src/threadsafe_queue_test.cpp",
+        "src/threadsafe_queue.h"
+    ],
+    deps = [
+        "@gtest//:gtest",
+        "@gtest//:gtest_main",
+    ],
+)

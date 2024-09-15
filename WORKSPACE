@@ -19,3 +19,11 @@ gcc_register_toolchain(
     name = "gcc_toolchain_x86_64",
     target_arch = ARCHS.x86_64,
 )
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+git_repository(
+    name = "gtest",
+    remote = "https://github.com/google/googletest.git",
+    commit = "0953a17a4281fc26831da647ad3fcd5e21e6473b",  # 或者指定具体的版本标签
+)
