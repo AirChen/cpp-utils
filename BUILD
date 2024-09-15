@@ -31,3 +31,15 @@ cc_binary (
         "@gtest//:gtest_main",
     ],
 )
+
+cc_binary (
+    name = "test_threadsafe_list",
+    srcs = [
+        "src/threadsafe_list_test.cpp",
+        "src/threadsafe_list.h"
+    ],
+    deps = [
+        "@gtest//:gtest",
+        "@gtest//:gtest_main",
+    ],
+)
