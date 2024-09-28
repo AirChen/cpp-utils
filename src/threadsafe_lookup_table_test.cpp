@@ -34,15 +34,15 @@ TEST_F(ThreadsafeLookupTableTest, RemoveMapping) {
     EXPECT_EQ(table.value_for("key", -1), -1);
 }
 
-// TEST_F(ThreadsafeLookupTableTest, GetMap) {
-//     table.add_or_update_mapping("key1", 100);
-//     table.add_or_update_mapping("key2", 200);
+TEST_F(ThreadsafeLookupTableTest, GetMap) {
+    table.add_or_update_mapping("key1", 100);
+    table.add_or_update_mapping("key2", 200);
 
-//     auto map = table.get_map();
-//     EXPECT_EQ(map.size(), 2);
-//     EXPECT_EQ(map["key1"], 100);
-//     EXPECT_EQ(map["key2"], 200);
-// }
+    auto map = table.get_map();
+    EXPECT_EQ(map.size(), 2);
+    EXPECT_EQ(map["key1"], 100);
+    EXPECT_EQ(map["key2"], 200);
+}
 
 TEST_F(ThreadsafeLookupTableTest, ConcurrentAccess) {
     const int num_threads = 4;
@@ -66,7 +66,7 @@ TEST_F(ThreadsafeLookupTableTest, ConcurrentAccess) {
         t.join();
     }
 
-    // EXPECT_EQ(table.get_map().size(), 0);
+    EXPECT_EQ(table.get_map().size(), 0);
 }
 
 TEST_F(ThreadsafeLookupTableTest, ConcurrentAddOrUpdate) {
