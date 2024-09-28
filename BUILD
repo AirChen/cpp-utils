@@ -43,3 +43,15 @@ cc_binary (
         "@gtest//:gtest_main",
     ],
 )
+
+cc_binary (
+    name = "test_spin_lock",
+    srcs = [
+        "src/spin_lock_test.cpp",
+        "src/spin_lock.h"
+    ],
+    deps = [
+        "@gtest//:gtest",
+        "@gtest//:gtest_main",
+    ],
+)
