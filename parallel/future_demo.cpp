@@ -5,6 +5,7 @@
 #include <deque>
 #include <mutex>
 #include <thread>
+#include <algorithm>
 
 int some_staff_process() {
     return 42;
@@ -122,6 +123,65 @@ template <typename F>
 auto make_future_chain(F&& func) {
     using result_type = typename std::result_of<F()>::type;
     return future_chain<result_type>().Schedule(std::forward<F>(func));
+}
+
+template<typename T>
+class future_set {
+private:
+    std::vector<std::future<T>> futures_;
+
+public:
+    // 添加future到集合
+    void add(std::future<T>&& future) {
+        futures_.push_back(std::move(future));
+    }
+
+    // 等待所有future完成
+    std::vector<T> wait_all() {
+        std::vector<T> results;
+        results.reserve(futures_.size());
+        
+        for (auto& fut : futures_) {
+            results.push_back(fut.get());
+        }
+        
+        return results;
+    }
+
+    // 等待任意一个future完成
+    std::pair<size_t, T> wait_any() {
+        while (true) {
+            for (size_t i = 0; i < futures_.size(); ++i) {
+                if (futures_[i].valid()) {
+                    auto status = futures_[i].wait_for(std::chrono::milliseconds(0));
+                    if (status == std::future_status::ready) {
+                        return {i, futures_[i].get()};
+                    }
+                }
+            }
+            std::this_thread::yield();
+        }
+    }
+};
+
+// 辅助函数：创建future_set并等待所有future完成
+template<typename T>
+std::vector<T> when_all(std::vector<std::future<T>>&& futures) {
+    future_set<T> set;
+    for (auto& fut : futures) {
+        set.add(std::move(fut));
+    }
+    return set.wait_all();
+}
+
+// 辅助函数：创建future_set并等待任意一个future完成
+template<typename T>
+std::pair<size_t, T> when_any(std::vector<std::future<T>>&& futures) {
+    future_set<T> set;
+    for (auto& fut : futures) {
+        set.add(std::move(fut));
+    }
+    return set.wait_any();
 }
 
 int main() {
