@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../ccia_code_samples/listings"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"stop_token": "cpp",
+			"iostream": "cpp",
+			"future": "cpp",
+			"algorithm": "cpp"
+		}
+	}
+}
