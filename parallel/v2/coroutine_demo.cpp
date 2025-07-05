@@ -5,14 +5,14 @@
 
 using namespace std::chrono_literals;
 
-std::future<int> foo()
+auto foo()
 {
   std::cout << "call foo\n";
     std::this_thread::sleep_for(3s);
     co_return 5;
 }
 
-std::future<std::future<int>> bar()
+auto bar()
 {
   std::cout << "call bar\n";
   std::cout << "before foo\n";

@@ -23,5 +23,9 @@ int main() {
 
     std::vector<int> intVec4{5, 2011};
     std::cout << intVec4.size() << '\n'; // 2
+
+    // reserve 不填充数据，resize 填充数据
+    // reserve 后调用 push 填充数据
+    // resize 后可以直接用 [] 访问和设置
     return 0;
 }
