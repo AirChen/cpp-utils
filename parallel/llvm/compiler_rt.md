@@ -1,3 +1,39 @@
+这是compiler-rt项目的一部分。消毒器可以在clang中启用，要构建编译器-rt项
+目，可以简单地在构建LLVM时将CMake变量-DLLVM_ENABLE_RUNTIMES=compiler-rt添加到
+CMake 配置步骤中。
+
+地址消毒器会替换对malloc()和free()函数的调用，并使用检查保护来检测所有内存
+访问。这会给应用程序增加很多开销，而且只会在应用程序的测试阶段使用地址消毒器。
+以在llvm/lib/Transforms/Instrumentation/AddressSanitzer.cpp 中为通道的实现源码
+
+找到内存问题
+ clang -fsanitize=address -g useafterfree.c -o useafterfree
+
+找到未初始化的值
+ clang -fsanitize=memory -g memory.c -o memory
+
+线程消毒器可以检测基于pthread的应用程序和使用LLVMlib++实现的应用
+程序中的数据竞争，可以在llvm/lib/Transforms/Instrumentation/ThreadSanitizer.cpp 文件中找到实现。
+ clang -fsanitize=thread -g thread.c -o thread -lpthread
+
+模糊测试
+要测试应用程序，需要编写单元测试，这是确保软件正常运行的好方法。然而，由于可能输入
+的指数数量，可能会错过某些奇怪的输入，以及一些错误。
+模糊测试在这方面可以提供帮助。其思想是为应用程序提供随机生成的数据，或者基于有效输
+入但随机更改的数据。这是重复进行的，因此应用程序将使用大量输入进行测试，这就是为什么模
+糊测试是一种强大的测试方法。
+LLVM自带了自己的模糊测试库。libFuzzer最初是LLVM核心库的一部分，最终移
+到了compiler-rt 中，所以该库设计用于测试小而快速的函数。
+
+clang -fsanitize=fuzzer,address -g fuzzer.c -o fuzzer
+
+若应用程序似乎运行缓慢，可能想知道代码中的时间花在了哪里，可以用XRay检测代码可以
+帮助完成这项任务。每个函数进入和退出时，都会向运行时库插入一个特殊的调用。允许计算函数
+调用的频率，以及在函数中花费的时间。可以在llvm/lib/XRay/目录中找到检测通道的实现，其运行
+时是compiler-rt 的一部分
+
+clang -fxray-instrument -fxray-instruction-threshold=1 -g xraydemo.c -o xraydemo
+
 以下是关于 LLVM 项目中 **compiler-rt** 的详细资料和资源整理，涵盖官方文档、代码结构、核心功能及实践指南：
 
 ---
